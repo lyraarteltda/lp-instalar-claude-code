@@ -1,0 +1,252 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Instalar Claude Code — Guia rápido em PT-BR</title>
+<meta name="description" content="Guia direto ao ponto para instalar o Claude Code (CLI da Anthropic), fazer login e entender os arquivos principais que controlam o comportamento do agente.">
+<meta property="og:title" content="Instalar Claude Code — Guia rápido em PT-BR">
+<meta property="og:description" content="Como instalar o Claude Code, autenticar e dominar os arquivos de configuração (CLAUDE.md, settings.json, skills, agents, MCP).">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://instalar-claude-code.maestrosdaia.com/">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E%E2%9A%99%EF%B8%8F%3C/text%3E%3C/svg%3E">
+<style>
+:root{
+  --bg:#0b0d10;
+  --bg-2:#11151a;
+  --fg:#e6edf3;
+  --fg-dim:#9aa4b2;
+  --accent:#d97757;
+  --accent-2:#f1b67a;
+  --line:#1f2630;
+  --code-bg:#0f1418;
+  --code-border:#222b36;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0;background:var(--bg);color:var(--fg);font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","Inter",system-ui,sans-serif;line-height:1.6;-webkit-font-smoothing:antialiased}
+a{color:var(--accent-2);text-decoration:none}
+a:hover{text-decoration:underline}
+.wrap{max-width:880px;margin:0 auto;padding:48px 24px 96px}
+header{border-bottom:1px solid var(--line);padding-bottom:32px;margin-bottom:40px}
+.eyebrow{display:inline-block;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);background:rgba(217,119,87,.08);padding:6px 12px;border-radius:999px;border:1px solid rgba(217,119,87,.25)}
+h1{font-size:44px;line-height:1.1;margin:20px 0 12px;letter-spacing:-0.02em}
+h2{font-size:26px;margin:48px 0 16px;letter-spacing:-0.01em;border-top:1px solid var(--line);padding-top:36px}
+h2:first-of-type{border-top:none;padding-top:0}
+h3{font-size:18px;margin:28px 0 10px;color:var(--accent-2)}
+p{color:var(--fg);margin:12px 0}
+.lede{font-size:19px;color:var(--fg-dim);max-width:680px}
+ul,ol{padding-left:20px}
+li{margin:6px 0}
+code{font-family:"SF Mono","JetBrains Mono",ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;background:var(--code-bg);border:1px solid var(--code-border);padding:1px 6px;border-radius:4px;color:var(--accent-2)}
+pre{background:var(--code-bg);border:1px solid var(--code-border);border-radius:8px;padding:18px 20px;overflow-x:auto;font-size:13.5px;line-height:1.55;margin:14px 0}
+pre code{background:none;border:none;padding:0;color:var(--fg)}
+.toc{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:18px 24px;margin:32px 0}
+.toc h4{margin:0 0 8px;font-size:13px;text-transform:uppercase;letter-spacing:.1em;color:var(--fg-dim)}
+.toc ul{margin:0;padding-left:18px}
+.toc a{color:var(--fg)}
+.callout{background:var(--bg-2);border-left:3px solid var(--accent);padding:14px 18px;border-radius:0 8px 8px 0;margin:18px 0;color:var(--fg-dim)}
+.callout strong{color:var(--fg)}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:14px}
+th,td{text-align:left;padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+th{color:var(--fg-dim);font-weight:600;font-size:12px;text-transform:uppercase;letter-spacing:.08em;border-bottom:1px solid var(--accent);background:var(--bg-2)}
+td code{font-size:12.5px;white-space:nowrap}
+.grid-os{display:grid;grid-template-columns:1fr;gap:14px;margin:18px 0}
+@media(min-width:640px){.grid-os{grid-template-columns:1fr 1fr}}
+.os-card{background:var(--bg-2);border:1px solid var(--line);border-radius:10px;padding:18px}
+.os-card h3{margin:0 0 8px;color:var(--accent-2);font-size:15px;text-transform:uppercase;letter-spacing:.06em}
+.os-card pre{margin:8px 0 0}
+footer{margin-top:64px;padding-top:24px;border-top:1px solid var(--line);color:var(--fg-dim);font-size:13px}
+footer a{color:var(--fg-dim)}
+.kbd{font-family:inherit;font-size:12px;border:1px solid var(--line);border-bottom-width:2px;border-radius:4px;padding:1px 6px;background:var(--bg-2);color:var(--fg-dim)}
+hr{border:none;border-top:1px solid var(--line);margin:32px 0}
+.badge{display:inline-block;font-size:11px;padding:3px 8px;border-radius:999px;background:rgba(241,182,122,.12);color:var(--accent-2);border:1px solid rgba(241,182,122,.3);margin-left:8px;vertical-align:middle}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="eyebrow">Guia técnico • PT-BR</span>
+  <h1>Instalar o Claude Code</h1>
+  <p class="lede">A CLI oficial da Anthropic para programar com Claude diretamente no seu terminal. Este guia cobre instalação em macOS, Linux e Windows, primeiro login, e os arquivos de configuração que você vai mexer todo dia.</p>
+</header>
+
+<nav class="toc" aria-label="Sumário">
+  <h4>Sumário</h4>
+  <ul>
+    <li><a href="#quick-start">1. Quick start (5 comandos)</a></li>
+    <li><a href="#install">2. Métodos de instalação</a></li>
+    <li><a href="#login">3. Primeiro login</a></li>
+    <li><a href="#files">4. Arquivos principais</a></li>
+    <li><a href="#commands">5. Comandos essenciais dentro do REPL</a></li>
+    <li><a href="#next">6. Próximos passos</a></li>
+  </ul>
+</nav>
+
+<h2 id="quick-start">1. Quick start</h2>
+<p>Se você está com pressa, são cinco linhas. Cole no terminal:</p>
+<pre><code># 1. Instalar (macOS / Linux)
+curl -fsSL https://claude.ai/install.sh | bash
+
+# 2. Verificar
+claude --version
+
+# 3. Entrar no diretório do seu projeto
+cd ~/meu-projeto
+
+# 4. Iniciar o Claude (REPL interativo)
+claude
+
+# 5. Já dentro do REPL, autenticar
+/login</code></pre>
+<div class="callout"><strong>É só isso para começar.</strong> O resto do guia é para você entender o que aconteceu e como customizar.</div>
+
+<h2 id="install">2. Métodos de instalação</h2>
+<p>O Claude Code é distribuído como binário nativo. A instalação não exige Node.js. Escolha o método do seu sistema:</p>
+
+<div class="grid-os">
+
+  <div class="os-card">
+    <h3>macOS / Linux</h3>
+    <p>Instalador oficial via curl. Cai em <code>~/.local/bin</code>:</p>
+    <pre><code>curl -fsSL https://claude.ai/install.sh | bash</code></pre>
+  </div>
+
+  <div class="os-card">
+    <h3>macOS (Homebrew)</h3>
+    <p>Para quem prefere gerenciar via brew:</p>
+    <pre><code>brew install --cask claude-code</code></pre>
+  </div>
+
+  <div class="os-card">
+    <h3>Windows (PowerShell)</h3>
+    <p>Instalador nativo:</p>
+    <pre><code>irm https://claude.ai/install.ps1 | iex</code></pre>
+  </div>
+
+  <div class="os-card">
+    <h3>Windows (winget)</h3>
+    <p>Pelo gerenciador oficial da Microsoft:</p>
+    <pre><code>winget install Anthropic.Claude</code></pre>
+  </div>
+
+</div>
+
+<h3>npm (legado)</h3>
+<p>Existia o pacote <code>@anthropic-ai/claude-code</code> no npm. Ainda funciona mas <strong>não é mais o caminho recomendado</strong> — o instalador nativo é mais rápido, não depende de Node, e atualiza sozinho.</p>
+<pre><code># só se você realmente precisa do path antigo
+npm install -g @anthropic-ai/claude-code</code></pre>
+
+<h3>Verificar a instalação</h3>
+<pre><code>claude --version
+claude doctor   # checa permissões, path, login, autoupdate</code></pre>
+
+<h2 id="login">3. Primeiro login</h2>
+<p>Na primeira vez que você roda <code>claude</code> dentro de uma pasta, ele abre o REPL e pede para autenticar. Você tem três caminhos:</p>
+<ol>
+  <li><strong>Claude Pro / Max (mais comum):</strong> dentro do REPL digite <code>/login</code> → o navegador abre, você autoriza, e pronto. Sem cartão de crédito separado, sem chave de API — usa a sua assinatura.</li>
+  <li><strong>Anthropic API key:</strong> defina <code>ANTHROPIC_API_KEY</code> no ambiente antes de subir o REPL. Útil para CI, servidores, e workflows automatizados.</li>
+  <li><strong>Amazon Bedrock / Google Vertex:</strong> empresas que já têm contrato com AWS ou GCP podem rotear o Claude pelo provedor de cloud — variáveis <code>CLAUDE_CODE_USE_BEDROCK=1</code> ou <code>CLAUDE_CODE_USE_VERTEX=1</code>.</li>
+</ol>
+<div class="callout">As credenciais ficam salvas em <code>~/.claude/.credentials.json</code> (Linux/Windows) ou no <strong>Keychain do macOS</strong> (preferido, mais seguro). Você não precisa fazer login de novo a cada sessão.</div>
+
+<h2 id="files">4. Arquivos principais</h2>
+<p>O comportamento do Claude Code é controlado por arquivos espalhados em três escopos: <strong>usuário</strong> (vale para todos os seus projetos), <strong>projeto</strong> (vale só dentro daquele repo) e <strong>local</strong> (não vai para o git). Memorize esta tabela — é o mapa mental que faz a diferença entre usar o Claude como brinquedo ou como ferramenta de produção:</p>
+
+<table>
+  <thead>
+    <tr><th>Arquivo</th><th>Local</th><th>Para quê serve</th></tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>CLAUDE.md</code> <span class="badge">essencial</span></td>
+      <td><code>~/.claude/CLAUDE.md</code> (global)<br><code>./CLAUDE.md</code> (projeto)</td>
+      <td>Instruções permanentes que entram em <em>todo</em> prompt. Convenções de código, comandos de build/teste, regras de estilo, contexto do produto. Carregado automaticamente ao iniciar o REPL na pasta.</td>
+    </tr>
+    <tr>
+      <td><code>settings.json</code></td>
+      <td><code>~/.claude/settings.json</code> (usuário)<br><code>.claude/settings.json</code> (projeto)<br><code>.claude/settings.local.json</code> (local, gitignored)</td>
+      <td>Configuração estruturada: modelo padrão, hooks, ferramentas permitidas/negadas, MCP servers, perfil de permissões. O <code>settings.local.json</code> é onde vai o que <strong>não pode</strong> entrar no git (tokens, paths absolutos).</td>
+    </tr>
+    <tr>
+      <td><code>.claude/skills/</code></td>
+      <td><code>~/.claude/skills/&lt;skill&gt;/SKILL.md</code><br><code>.claude/skills/&lt;skill&gt;/SKILL.md</code></td>
+      <td>Procedimentos repetíveis (recipes) que o Claude carrega sob demanda. Cada skill é uma pasta com um <code>SKILL.md</code> que tem frontmatter <code>name</code> + <code>description</code>. Use para regras de negócio, deploy steps, padrões de PR, etc.</td>
+    </tr>
+    <tr>
+      <td><code>.claude/agents/</code></td>
+      <td><code>~/.claude/agents/&lt;agent&gt;.md</code><br><code>.claude/agents/&lt;agent&gt;.md</code></td>
+      <td>Subagentes especializados que rodam em contexto isolado. Use para code review, exploração de codebase, pesquisa, ou qualquer tarefa que você queira delegar sem poluir o contexto principal.</td>
+    </tr>
+    <tr>
+      <td><code>.mcp.json</code></td>
+      <td><code>./.mcp.json</code> (projeto)</td>
+      <td>Servidores MCP (Model Context Protocol) que dão ao Claude acesso a ferramentas externas: Playwright, Supabase, GitHub, sistemas internos. Compartilhado com o time via git.</td>
+    </tr>
+    <tr>
+      <td>Slash commands customizados</td>
+      <td><code>~/.claude/commands/&lt;cmd&gt;.md</code><br><code>.claude/commands/&lt;cmd&gt;.md</code></td>
+      <td>Atalhos do tipo <code>/deploy</code>, <code>/test</code>, <code>/review</code>. Cada comando é um <code>.md</code> com o prompt — Claude executa quando você digita o slash no REPL.</td>
+    </tr>
+    <tr>
+      <td>Auto-memória</td>
+      <td><code>~/.claude/projects/&lt;slug&gt;/memory/</code></td>
+      <td>Sistema persistente que o Claude usa para lembrar fatos sobre você, feedback recebido e contexto do projeto entre sessões. Atualizado automaticamente — você não precisa editar.</td>
+    </tr>
+    <tr>
+      <td>Histórico de sessões</td>
+      <td><code>~/.claude/projects/&lt;slug&gt;/*.jsonl</code></td>
+      <td>Transcrição completa de cada conversa. Útil para auditoria, debug, ou para reprocessar uma sessão antiga.</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="callout"><strong>Regra de ouro:</strong> escreva um <code>CLAUDE.md</code> no seu projeto antes de qualquer outra coisa. Liste comandos de build, padrões de commit, convenções do código e o que está fora do escopo. É o investimento de 10 minutos que mais paga ao longo do tempo.</div>
+
+<h2 id="commands">5. Comandos essenciais dentro do REPL</h2>
+<table>
+  <thead><tr><th>Comando</th><th>O que faz</th></tr></thead>
+  <tbody>
+    <tr><td><code>/help</code></td><td>Lista todos os comandos disponíveis</td></tr>
+    <tr><td><code>/login</code> / <code>/logout</code></td><td>Autentica ou desconecta a conta</td></tr>
+    <tr><td><code>/init</code></td><td>Cria um <code>CLAUDE.md</code> inicial baseado no seu projeto</td></tr>
+    <tr><td><code>/clear</code></td><td>Limpa o contexto da conversa atual</td></tr>
+    <tr><td><code>/compact</code></td><td>Compacta o histórico para liberar contexto sem perder o fio</td></tr>
+    <tr><td><code>/model</code></td><td>Troca o modelo (Opus, Sonnet, Haiku)</td></tr>
+    <tr><td><code>/agents</code></td><td>Lista subagentes disponíveis</td></tr>
+    <tr><td><code>/mcp</code></td><td>Mostra status dos servidores MCP conectados</td></tr>
+    <tr><td><code>/cost</code></td><td>Mostra consumo de tokens da sessão</td></tr>
+    <tr><td><code>!&lt;cmd&gt;</code></td><td>Executa um comando shell e injeta a saída no contexto</td></tr>
+    <tr><td><span class="kbd">Esc</span> <span class="kbd">Esc</span></td><td>Edita a última mensagem que você enviou</td></tr>
+  </tbody>
+</table>
+
+<h2 id="next">6. Próximos passos</h2>
+<ul>
+  <li>Rode <code>/init</code> num projeto seu — o Claude vai gerar um <code>CLAUDE.md</code> inicial baseado no que ele lê do código.</li>
+  <li>Adicione o primeiro <strong>skill</strong>: crie <code>.claude/skills/meu-deploy/SKILL.md</code> com o frontmatter <code>name</code> + <code>description</code> e um passo-a-passo do seu processo de deploy. Da próxima vez que você pedir para fazer deploy, Claude carrega o skill e segue.</li>
+  <li>Configure um servidor MCP: o <code>.mcp.json</code> pode ligar Claude ao Playwright (testes de browser), Supabase (queries diretas), ou ao GitHub (PRs e issues sem sair do REPL).</li>
+  <li>Compartilhe o <code>.claude/</code> do projeto com o time via git. <code>settings.local.json</code> fica gitignored — o resto vira convenção do time.</li>
+</ul>
+
+<hr>
+
+<h3>Links oficiais</h3>
+<ul>
+  <li><a href="https://code.claude.com/docs/en/overview" rel="noopener">Documentação oficial — Overview</a></li>
+  <li><a href="https://code.claude.com/docs/en/setup" rel="noopener">Setup &amp; instalação</a></li>
+  <li><a href="https://code.claude.com/docs/en/memory" rel="noopener">CLAUDE.md &amp; memory</a></li>
+  <li><a href="https://code.claude.com/docs/en/settings" rel="noopener">settings.json reference</a></li>
+  <li><a href="https://code.claude.com/docs/en/skills" rel="noopener">Skills</a></li>
+  <li><a href="https://code.claude.com/docs/en/sub-agents" rel="noopener">Subagents</a></li>
+  <li><a href="https://code.claude.com/docs/en/mcp" rel="noopener">MCP — Model Context Protocol</a></li>
+  <li><a href="https://code.claude.com/docs/en/slash-commands" rel="noopener">Slash commands</a></li>
+</ul>
+
+<footer>
+  <p>Página mantida por <a href="https://maestrosdaia.com">Maestros da IA</a>. Conteúdo baseado na documentação oficial da Anthropic em <code>code.claude.com/docs</code>. Última atualização: 11 de abril de 2026.</p>
+</footer>
+
+</div>
+</body>
+</html>
