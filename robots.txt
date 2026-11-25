@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://instalar-claude-code.maestrosdaia.com/sitemap.xml
